@@ -1,27 +1,16 @@
 options(scipen=999) # To ignore exponential notation
+
 # Import libraries
-#install.packages("tidyverse")
-#install.packages("plyr")
-#install.packages("moments")
-#install.packeges("car")
-#install.packages("scales")
-#install.packages("reshape")
-#install.packages("ggcorrplot")
-library(ggcorrplot)
 library(reshape)
 library(tidyverse)
 library(plyr)
-#library(lubridate) # for integer conversion to year
 library(moments) # for skewness and kurtosis
-#library(qqplotr) # For quantile plots
-#library(scales) # For Date factor
 library(car) # For quantile plots
 library(ggcorrplot)
-# Update: Code will load the package only if the package is not loaded
+
 # Explore the structure of the data:
 housing <- read.csv("H://personal//Kaggle_House_Price//train.csv", header = T, sep = ",")
 
-## Write control points to check whether the code is correct or not
 ## Understand the data: Data Dimension, Data structure, class and type of the data (categorical, numerical and others)  
 dim(housing)
 head(housing)
@@ -37,6 +26,7 @@ print(data_type_housing)
 # Data type conversion (i.e character to factor, others)
 ## OverallQual and OverallCond should be factors
 ## MSSubClass should be a factor
+## Creating new variable for month, with abbreviations of months instead of numbers 
 housing[, c("MSSubClass", "OverallQual", "OverallCond")] = 
   lapply(housing[, c("MSSubClass", "OverallQual", "OverallCond")], as.factor)
 
@@ -53,6 +43,7 @@ missing_data_table <- housing %>%
 missing_data_table <- setNames(cbind(rownames(missing_data_table), missing_data_table, row.names = NULL), 
                                c("Variables", "Percentage"))
 
+# Creating a table containing variable names with non zero missing values
 missing_data_table <- missing_data_table %>%
   arrange(desc(Percentage)) %>%
   filter(Percentage!=0)
@@ -91,8 +82,6 @@ ggplot(housing, aes(x=SalePrice)) +
   ggtitle("Density plot of SalePrice") +
   theme(plot.title = element_text(hjust = 0.5, size = 15))
 
-## Update and Note: Wanted to add normal density plot also to here, so add later.
-
 # Skewness and kurtosis
 sprintf("Skewness:", print(skewness(housing$SalePrice)))
 sprintf("Kurtosis:", print(kurtosis(housing$SalePrice)))
@@ -110,10 +99,11 @@ housing %>%
 
 # Create categorical variable "HasPool" with values y or n 
 housing <- housing %>%
-  mutate(., HasPool = ifelse(PoolArea > 0, "Y", "N")) 
+  mutate(., HasPool = as.factor(ifelse(PoolArea > 0, "Y", "N"))) 
 
-# Analysis for other numerical variables (density plots)
+# Analysis for other numerical variables
 
+# Histogram
 housing %>%
   keep(is.numeric) %>% 
   gather() %>% 
@@ -124,6 +114,7 @@ housing %>%
   theme(axis.text.x = element_text(size=9, angle= -45), 
         plot.title = element_text(hjust = 0.5, size = 15))
 
+# Density plots
 housing %>%
   keep(is.numeric) %>% 
   gather() %>% 
