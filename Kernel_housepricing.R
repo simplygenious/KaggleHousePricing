@@ -86,8 +86,10 @@ dim(housing)
 ggplot(housing, aes(x=SalePrice)) + 
   geom_density(color = "dark blue", alpha=.1) + 
   geom_vline(aes(xintercept = mean(SalePrice)), color = "#FC4E08", linetype = "dashed", size = 1) + 
-  geom_vline(aes(xintercept = median(SalePrice)), color = "blue", linetype = 4, size = 1) +  
-  geom_histogram(aes(y=..density..),colour = "white", fill = "cornflowerblue", alpha=0.5)
+  geom_vline(aes(xintercept = median(SalePrice)), color = "dark blue", linetype = 4, size = 1) +  
+  geom_histogram(aes(y=..density..),colour = "white", fill = "cornflowerblue", alpha=0.5) +
+  ggtitle("Density plot of SalePrice") +
+  theme(plot.title = element_text(hjust = 0.5, size = 15))
 
 ## Update and Note: Wanted to add normal density plot also to here, so add later.
 
@@ -99,6 +101,7 @@ sprintf("Kurtosis:", print(kurtosis(housing$SalePrice)))
 OutVals = boxplot(housing$SalePrice)$out
 which(housing$SalePrice %in% OutVals)
 boxplot.stats(housing$SalePrice)$out
+title("Boxplot to Check Outliers", ylab = "SalePrice")
 
 housing %>%
   filter(SalePrice >= 700000 | SalePrice <= 50000) %>%
@@ -117,7 +120,9 @@ housing %>%
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
   geom_histogram(colour = "white", fill = "cornflowerblue") +
-  theme(axis.text.x = element_text(size=9, angle= -45))
+  ggtitle("Histogram of All the Numeric Variables") +
+  theme(axis.text.x = element_text(size=9, angle= -45), 
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 housing %>%
   keep(is.numeric) %>% 
@@ -125,19 +130,25 @@ housing %>%
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
   geom_density(colour = "white", fill = "cornflowerblue") +
-  theme(axis.text.x = element_text(size=9, angle= -45))
+  ggtitle("Density Plots of All the Numeric Variables") +
+  theme(axis.text.x = element_text(size=9, angle= -45), 
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 ### Quantile plots for all the numerical variables
-
-par(mfrow=c(4,2))  
+### Update with the title for this plot 
 
 numerical <- dplyr::select_if(housing, is.numeric)
+par()              # view current settings
+opar <- par()
 
 par(mfrow=c(2, 2))
+#title("Quantile-Quantile plot to check normality")
 for(i in 1:ncol(numerical))
 {
   qqPlot(numerical[, i], lwd=1, envelope = FALSE, ylab = colnames(numerical)[i], col = alpha("black", 0.3))
 }
+mtext("Quantile-Quantile plot to check normality", outer = TRUE, cex = 1.5)
+par(opar)
 
 # Analysis for categorical variables (barplots)
 housing %>%
@@ -147,7 +158,9 @@ housing %>%
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
   geom_bar(colour = "white", fill = "cornflowerblue") +
-  theme(axis.text.x = element_text(size=8, angle= 90))
+  ggtitle("Bar Plots of the Factor Variables") +
+  theme(axis.text.x = element_text(size=8, angle= 90), 
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 housing %>%
   keep(is.factor) %>% 
@@ -156,7 +169,9 @@ housing %>%
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
   geom_bar(colour = "white", fill = "cornflowerblue") +
-  theme(axis.text.x = element_text(size=8, angle= 90))
+  ggtitle("Bar Plots of the Factor Variables") +
+  theme(axis.text.x = element_text(size=8, angle= 90), 
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 housing %>%
   keep(is.factor) %>% 
@@ -165,7 +180,9 @@ housing %>%
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
   geom_bar(colour = "white", fill = "cornflowerblue") +
-  theme(axis.text.x = element_text(size=8, angle= 90))
+  ggtitle("Bar Plots of the Factor Variables") +
+  theme(axis.text.x = element_text(size=8, angle= 90), 
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 housing %>%
   keep(is.factor) %>% 
@@ -174,7 +191,9 @@ housing %>%
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
   geom_bar(colour = "white", fill = "cornflowerblue") +
-  theme(axis.text.x = element_text(size=8, angle= 90))
+  ggtitle("Bar Plots of the Factor Variables") +
+  theme(axis.text.x = element_text(size=8, angle= 90), 
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 ## Scatterplot between numeric variables and SalePrice
 housing %>%
@@ -183,7 +202,9 @@ housing %>%
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_point(aes(value, SalePrice), col=adjustcolor("cornflowerblue", alpha=0.4)) + 
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 45))
+  ggtitle("Scatter Plots of the SalePrice vs Numeric Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 45), 
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 housing %>%
   keep(is.numeric) %>%  
@@ -191,7 +212,9 @@ housing %>%
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_point(aes(value, SalePrice), col=adjustcolor("cornflowerblue", alpha=0.4)) + 
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 45))
+  ggtitle("Scatter Plots of the SalePrice vs Numeric Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 45), 
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 # Correlation analysis between numerical variables
 ##### Network plot
@@ -199,14 +222,14 @@ housing %>%
 #library(corrr)
 
 detach(package:reshape)
-p <- ggcorrplot(cor(numerical), 
+ggcorrplot(cor(numerical), 
                 p.mat = cor_pmat(numerical), 
-                hc.order=TRUE, type = "lower", method = "circle")
-
-p + theme(axis.text.x = element_text(size=10, angle=90), 
-          axis.text.y = element_text(size=10))
-
-## Scatterplot between target and numerical
+                hc.order=TRUE, type = "lower", method = "circle") +
+  ggtitle("Correlation Plot of Numeric Variables") +
+  theme(axis.text.x = element_text(size=10, angle= 90),
+        axis.text.y = element_text(size=10),
+        plot.title = element_text(hjust = 0.5, size = 15))
+  
 ## Boxplot or any other plot for categorical vs target
 ## Create jitterplot for boxplot
 
@@ -220,7 +243,9 @@ categorical %>%
   ggplot() + geom_boxplot(aes(value, SalePrice)) +
   geom_jitter(aes(value, SalePrice), alpha = 0.3, color = "cornflowerblue") + 
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 90)) 
+  ggtitle("Jitter Box Plots of the SalePrice vs Factor Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 90),
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 categorical %>%
   select(8:14, "SalePrice") %>%  
@@ -228,7 +253,9 @@ categorical %>%
   ggplot() + geom_boxplot(aes(value, SalePrice)) +
   geom_jitter(aes(value, SalePrice), alpha = 0.3, color = "cornflowerblue") + 
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 90)) 
+  ggtitle("Jitter Box Plots of the SalePrice vs Factor Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 90),
+        plot.title = element_text(hjust = 0.5, size = 15)) 
 
 categorical %>%
   select(15:21, "SalePrice") %>%  
@@ -236,7 +263,9 @@ categorical %>%
   ggplot() + geom_boxplot(aes(value, SalePrice)) +
   geom_jitter(aes(value, SalePrice), alpha = 0.3, color = "cornflowerblue") + 
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 90)) 
+  ggtitle("Jitter Box Plots of the SalePrice vs Factor Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 90),
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 categorical %>%
   select(22:28, "SalePrice") %>%  
@@ -244,7 +273,9 @@ categorical %>%
   ggplot() + geom_boxplot(aes(value, SalePrice)) +
   geom_jitter(aes(value, SalePrice), alpha = 0.3, color = "cornflowerblue") + 
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 90)) 
+  ggtitle("Jitter Box Plots of the SalePrice vs Factor Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 90),
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 categorical %>%
   select(29:35, "SalePrice") %>%  
@@ -252,7 +283,9 @@ categorical %>%
   ggplot() + geom_boxplot(aes(value, SalePrice)) +
   geom_jitter(aes(value, SalePrice), alpha = 0.3, color = "cornflowerblue") + 
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 90)) 
+  ggtitle("Jitter Box Plots of the SalePrice vs Factor Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 90),
+        plot.title = element_text(hjust = 0.5, size = 15)) 
 
 # Scatterplot for categorical variable
 categorical %>%
@@ -260,32 +293,42 @@ categorical %>%
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_point(aes(value, SalePrice), stat = "identity", col=adjustcolor("cornflowerblue", alpha=0.5)) +
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 90))
+  ggtitle("Scatter Plots of the SalePrice vs Factor Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 90),
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 categorical %>%
   select(7:14, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_point(aes(value, SalePrice), stat = "identity", col=adjustcolor("cornflowerblue", alpha=0.5)) +
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 90))
+  ggtitle("Scatter Plots of the SalePrice vs Factor Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 90),
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 categorical %>%
   select(15:21, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_point(aes(value, SalePrice), stat = "identity", col=adjustcolor("cornflowerblue", alpha=0.5)) +
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 90))
+  ggtitle("Scatter Plots of the SalePrice vs Factor Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 90),
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 categorical %>%
   select(22:28, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_point(aes(value, SalePrice), stat = "identity", col=adjustcolor("cornflowerblue", alpha=0.5)) +
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 90))
+  ggtitle("Scatter Plots of the SalePrice vs Factor Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 90),
+        plot.title = element_text(hjust = 0.5, size = 15))
 
 categorical %>%
   select(29:35, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_point(aes(value, SalePrice), stat = "identity", col=adjustcolor("cornflowerblue", alpha=0.5)) +
   facet_wrap(~variable, scales = "free_x") +
-  theme(axis.text.x = element_text(size=9, angle= 90))
+  ggtitle("Scatter Plots of the SalePrice vs Factor Variables") +
+  theme(axis.text.x = element_text(size=9, angle= 90),
+        plot.title = element_text(hjust = 0.5, size = 15))
