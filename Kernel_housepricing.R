@@ -116,14 +116,16 @@ housing %>%
   gather() %>% 
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
-  geom_histogram()
+  geom_histogram(colour = "white", fill = "cornflowerblue") +
+  theme(axis.text.x = element_text(size=9, angle= -45))
 
 housing %>%
   keep(is.numeric) %>% 
   gather() %>% 
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
-  geom_density()
+  geom_density(colour = "white", fill = "cornflowerblue") +
+  theme(axis.text.x = element_text(size=9, angle= -45))
 
 ### Quantile plots for all the numerical variables
 
@@ -144,7 +146,8 @@ housing %>%
   gather() %>% 
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
-  geom_bar()
+  geom_bar(colour = "white", fill = "cornflowerblue") +
+  theme(axis.text.x = element_text(size=8, angle= 90))
 
 housing %>%
   keep(is.factor) %>% 
@@ -152,7 +155,8 @@ housing %>%
   gather() %>% 
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
-  geom_bar()
+  geom_bar(colour = "white", fill = "cornflowerblue") +
+  theme(axis.text.x = element_text(size=8, angle= 90))
 
 housing %>%
   keep(is.factor) %>% 
@@ -160,7 +164,8 @@ housing %>%
   gather() %>% 
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
-  geom_bar()
+  geom_bar(colour = "white", fill = "cornflowerblue") +
+  theme(axis.text.x = element_text(size=8, angle= 90))
 
 housing %>%
   keep(is.factor) %>% 
@@ -168,22 +173,25 @@ housing %>%
   gather() %>% 
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
-  geom_bar()
+  geom_bar(colour = "white", fill = "cornflowerblue") +
+  theme(axis.text.x = element_text(size=8, angle= 90))
 
 ## Scatterplot between numeric variables and SalePrice
 housing %>%
   keep(is.numeric) %>%  
   select(1:17, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
-  ggplot() + geom_point(aes(value, SalePrice, colour=SalePrice)) + 
-  facet_wrap(~variable, scales = "free_x")
+  ggplot() + geom_point(aes(value, SalePrice), col=adjustcolor("cornflowerblue", alpha=0.4)) + 
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 45))
 
 housing %>%
   keep(is.numeric) %>%  
   select(18:34, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
-  ggplot() + geom_point(aes(value, SalePrice, colour=SalePrice)) + 
-  facet_wrap(~variable, scales = "free_x")
+  ggplot() + geom_point(aes(value, SalePrice), col=adjustcolor("cornflowerblue", alpha=0.4)) + 
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 45))
 
 # Correlation analysis between numerical variables
 ##### Network plot
@@ -193,7 +201,7 @@ housing %>%
 detach(package:reshape)
 p <- ggcorrplot(cor(numerical), 
                 p.mat = cor_pmat(numerical), 
-                hc.order=TRUE)
+                hc.order=TRUE, type = "lower", method = "circle")
 
 p + theme(axis.text.x = element_text(size=10, angle=90), 
           axis.text.y = element_text(size=10))
@@ -211,63 +219,73 @@ categorical %>%
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_boxplot(aes(value, SalePrice)) +
   geom_jitter(aes(value, SalePrice), alpha = 0.3, color = "cornflowerblue") + 
-  facet_wrap(~variable, scales = "free_x") 
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 90)) 
 
 categorical %>%
   select(8:14, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_boxplot(aes(value, SalePrice)) +
   geom_jitter(aes(value, SalePrice), alpha = 0.3, color = "cornflowerblue") + 
-  facet_wrap(~variable, scales = "free_x") 
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 90)) 
 
 categorical %>%
   select(15:21, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_boxplot(aes(value, SalePrice)) +
   geom_jitter(aes(value, SalePrice), alpha = 0.3, color = "cornflowerblue") + 
-  facet_wrap(~variable, scales = "free_x") 
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 90)) 
 
 categorical %>%
   select(22:28, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_boxplot(aes(value, SalePrice)) +
   geom_jitter(aes(value, SalePrice), alpha = 0.3, color = "cornflowerblue") + 
-  facet_wrap(~variable, scales = "free_x") 
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 90)) 
 
 categorical %>%
   select(29:35, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
   ggplot() + geom_boxplot(aes(value, SalePrice)) +
   geom_jitter(aes(value, SalePrice), alpha = 0.3, color = "cornflowerblue") + 
-  facet_wrap(~variable, scales = "free_x") 
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 90)) 
 
 # Scatterplot for categorical variable
 categorical %>%
   select(1:6, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
-  ggplot() + geom_point(aes(value, SalePrice), stat = "identity") +
-  facet_wrap(~variable, scales = "free_x")
+  ggplot() + geom_point(aes(value, SalePrice), stat = "identity", col=adjustcolor("cornflowerblue", alpha=0.5)) +
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 90))
 
 categorical %>%
   select(7:14, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
-  ggplot() + geom_point(aes(value, SalePrice), stat = "identity") +
-  facet_wrap(~variable, scales = "free_x")
+  ggplot() + geom_point(aes(value, SalePrice), stat = "identity", col=adjustcolor("cornflowerblue", alpha=0.5)) +
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 90))
 
 categorical %>%
   select(15:21, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
-  ggplot() + geom_point(aes(value, SalePrice), stat = "identity") +
-  facet_wrap(~variable, scales = "free_x")
+  ggplot() + geom_point(aes(value, SalePrice), stat = "identity", col=adjustcolor("cornflowerblue", alpha=0.5)) +
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 90))
 
 categorical %>%
   select(22:28, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
-  ggplot() + geom_point(aes(value, SalePrice), stat = "identity") +
-  facet_wrap(~variable, scales = "free_x")
+  ggplot() + geom_point(aes(value, SalePrice), stat = "identity", col=adjustcolor("cornflowerblue", alpha=0.5)) +
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 90))
 
 categorical %>%
   select(29:35, "SalePrice") %>%  
   melt(., id.vars = "SalePrice") %>%
-  ggplot() + geom_point(aes(value, SalePrice), stat = "identity") +
-  facet_wrap(~variable, scales = "free_x")
+  ggplot() + geom_point(aes(value, SalePrice), stat = "identity", col=adjustcolor("cornflowerblue", alpha=0.5)) +
+  facet_wrap(~variable, scales = "free_x") +
+  theme(axis.text.x = element_text(size=9, angle= 90))
